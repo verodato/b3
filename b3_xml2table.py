@@ -31,7 +31,7 @@ def xml2table():
   f = open('bvbg18601_'+ dt +'.tsv', 'w')
   
   # print file header
-  f.write('TckrSymb\tDt\tOpnIntrst\tFrstPric\tMinPric\tMaxPric\tTradAvrgPric\tLastPric\n')
+  f.write('TckrSymb\tOpnIntrst\tFrstPric\tMinPric\tMaxPric\tTradAvrgPric\tLastPric\n')
 
   # list of nodes of "PricRpt" tags
   itemlist = xmldoc.getElementsByTagName('PricRpt')
