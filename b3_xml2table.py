@@ -24,8 +24,8 @@ def xml2table():
 
   # get date from file
   dt = xmldoc.getElementsByTagName('CreDtAndTm')[0].childNodes[0].nodeValue
-  dt = re.sub('-','',dt[0:10])
   print('date',dt)
+  dt = re.sub('-','',dt[0:10])
 
   # open .tsv file to save results
   f = open('bvbg18601_'+ dt +'.tsv', 'w')
@@ -50,9 +50,9 @@ def xml2table():
       LastPric = s.getElementsByTagName("LastPric")[0].childNodes[0].nodeValue           # close price
       RglrTxsQty = s.getElementsByTagName("RglrTxsQty")[0].childNodes[0].nodeValue       # number of transactions.
       # write to file
-      f.write(TckrSymb+'\t'+Dt+'\t'+OpnIntrst+'\t'+FrstPric+'\t'+MinPric+'\t'+MaxPric+'\t'+TradAvrgPric+'\t'+LastPric+'\n')
+      f.write(TckrSymb+'\t'+OpnIntrst+'\t'+FrstPric+'\t'+MinPric+'\t'+MaxPric+'\t'+TradAvrgPric+'\t'+LastPric+'\n')
     else:
-      f.write(TckrSymb+'\t'+Dt+'\t'+OpnIntrst+'\t-\t-\t-\t-\t-\n')
+      f.write(TckrSymb+'\t'+OpnIntrst+'\t-\t-\t-\t-\t-\n')
 
 
 if __name__ == "__main__":
