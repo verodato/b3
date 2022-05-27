@@ -8,7 +8,7 @@ import re
 import datetime
 from datetime import timedelta, datetime
 from xml.dom import minidom
-from settings import path
+from settings import path, pathXml
 
 
 def xml2table():
@@ -17,10 +17,20 @@ def xml2table():
   .tsv file.
    '''
   
-  # find xml file and read it
-  for f in listdir(path):
-      if isfile(path + f):
-        xmldoc = minidom.parse(path + f)
+  # check if there is a xml file in dir
+  if not os.listdir(pathXml):
+    print("There is no xml file in dir", pathXml)
+    return
+  else:
+    # find xml file and read it
+    for f in listdir(pathXml):
+        if isfile(pathXml + f):
+          xmldoc = minidom.parse(pathXml + f)
+          # delete xml file
+          os.remove(pathXml + f)
+        else:
+          print('Could not find xml file in dir',pathXml)
+          return
 
   # get date from file
   dt = xmldoc.getElementsByTagName('CreDtAndTm')[0].childNodes[0].nodeValue
@@ -28,10 +38,10 @@ def xml2table():
   dt = re.sub('-','',dt[0:10])
 
   # open .tsv file to save results
-  f = open('bvbg18601_'+ dt +'.tsv', 'w')
+  f = open(path + 'tsv/bvbg18601_'+ dt +'.tsv', 'w')
   
   # print file header
-  f.write('TckrSymb\tOpnIntrst\tFrstPric\tMinPric\tMaxPric\tTradAvrgPric\tLastPric\n')
+  f.write('TckrSymb\tOpnIntrst\tFrstPric\tMinPric\tMaxPric\tTradAvrgPric\tLastPric\tRglrTxsQty\n')
 
   # list of nodes of "PricRpt" tags
   itemlist = xmldoc.getElementsByTagName('PricRpt')
@@ -48,11 +58,11 @@ def xml2table():
       MaxPric  = s.getElementsByTagName("MaxPric")[0].childNodes[0].nodeValue            # maximum price
       TradAvrgPric = s.getElementsByTagName("TradAvrgPric")[0].childNodes[0].nodeValue   # trade averaged price
       LastPric = s.getElementsByTagName("LastPric")[0].childNodes[0].nodeValue           # close price
-      RglrTxsQty = s.getElementsByTagName("RglrTxsQty")[0].childNodes[0].nodeValue       # number of transactions.
+      RglrTxsQty = s.getElementsByTagName("RglrTxsQty")[0].childNodes[0].nodeValue       # number of transactions
       # write to file
-      f.write(TckrSymb+'\t'+OpnIntrst+'\t'+FrstPric+'\t'+MinPric+'\t'+MaxPric+'\t'+TradAvrgPric+'\t'+LastPric+'\n')
+      f.write(TckrSymb+'\t'+OpnIntrst+'\t'+FrstPric+'\t'+MinPric+'\t'+MaxPric+'\t'+TradAvrgPric+'\t'+LastPric+'\t'+RglrTxsQty+'\n')
     else:
-      f.write(TckrSymb+'\t'+OpnIntrst+'\t-\t-\t-\t-\t-\n')
+      f.write(TckrSymb+'\t'+OpnIntrst+'\t-\t-\t-\t-\t-\t-\n')
 
 
 if __name__ == "__main__":
